@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Toko Sepatu Sederhana</title>
+    <style>
+      :root {
+        --accent: #2b6cb0;
+        --muted: #6b7280;
+        --card: #ffffff;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Inter, system-ui, Arial, sans-serif;
+        margin: 0;
+        background: #f3f4f6;
+        color: #111;
+      }
+      header {
+        background: linear-gradient(90deg, var(--accent), #1e40af);
+        color: #fff;
+        padding: 18px;
+      }
+      .container {
+        max-width: 1100px;
+        margin: 24px auto;
+        padding: 0 16px;
+      }
+      .brand {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .logo {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        background: #fff;
+        display: inline-grid;
+        place-items: center;
+        color: var(--accent);
+        font-weight: 700;
+      }
+      nav {
+        margin-left: auto;
+      }
+      .search {
+        margin-top: 12px;
+        display: flex;
+        gap: 8px;
+      }
+      .search input {
+        flex: 1;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+        margin-top: 18px;
+      }
+      .card {
+        background: var(--card);
+        padding: 12px;
+        border-radius: 10px;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+        display: flex;
+        flex-direction: column;
+      }
+      .card img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+      .card h3 {
+        margin: 8px 0 6px;
+        font-size: 16px;
+      }
+      .price {
+        font-weight: 700;
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .btn {
+        background: var(--accent);
+        color: #fff;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+      .cart-btn {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        background: #111;
+        color: #fff;
+        border-radius: 999px;
+        padding: 12px 16px;
+        box-shadow: 0 8px 20px rgba(2, 6, 23, 0.3);
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .cart-drawer {
+        position: fixed;
+        right: 18px;
+        bottom: 72px;
+        width: 320px;
+        max-height: 70vh;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 12px 40px rgba(2, 6, 23, 0.2);
+        overflow: auto;
+        padding: 12px;
+        display: none;
+      }
+      .cart-item {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .cart-item img {
+        width: 56px;
+        height: 56px;
+        border-radius: 8px;
+        object-fit: cover;
+      }
+      footer {
+        padding: 20px 0;
+        text-align: center;
+        color: var(--muted);
+        margin-top: 34px;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      @media (max-width: 600px) {
+        .cart-drawer {
+          right: 10px;
+          left: 10px;
+          width: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container" style="display: flex; align-items: center; gap: 16px">
+        <div class="brand">
+          <div class="logo">SS</div>
+          <div>
+            <div style="font-weight: 700">Toko Sepatu Sederhana</div>
+            <div style="font-size: 13px; color: rgba(255, 255, 255, 0.9)">Koleksi sepatu casual & sporty</div>
+          </div>
+        </div>
+        <nav class="topbar">
+          <div style="color: rgba(255, 255, 255, 0.95); font-weight: 600">Beranda</div>
+          <div style="color: rgba(255, 255, 255, 0.9)">Kategori</div>
+          <div style="color: rgba(255, 255, 255, 0.9)">Kontak</div>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <div style="display: flex; flex-direction: column">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+          <h1 style="margin: 0">Katalog Sepatu</h1>
+          <div style="display: flex; gap: 8px; align-items: center">
+            <select id="filter" style="padding: 8px; border-radius: 8px; border: 1px solid #e5e7eb">
+              <option value="all">Semua Kategori</option>
+              <option value="casual">Casual</option>
+              <option value="sport">Sport</option>
+              <option value="formal">Formal</option>
+            </select>
+            <input id="search" placeholder="Cari sepatu..." style="padding: 8px; border-radius: 8px; border: 1px solid #e5e7eb" />
+            <button class="btn" onclick="clearFilters()">Reset</button>
+          </div>
+        </div>
+
+        <div class="grid" id="catalog"></div>
+
+        <div style="margin-top: 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+          <div class="muted">Menampilkan <span id="count">0</span> produk</div>
+          <div style="font-size: 13px" class="muted">Demo sederhana — klik "Tambah ke Keranjang" untuk mencoba</div>
+        </div>
+      </div>
+
+      <div class="cart-drawer" id="cartDrawer">
+        <h3 style="margin: 6px 0">Keranjang Anda</h3>
+        <div id="cartList"></div>
+        <div style="border-top: 1px solid #eef2f6; padding-top: 10px; display: flex; justify-content: space-between; align-items: center">
+          <div style="font-weight: 700">Total: Rp <span id="totalPrice">0</span></div>
+          <button class="btn" onclick="checkout()">Checkout</button>
+        </div>
+      </div>
+
+      <button class="cart-btn" id="openCart" onclick="toggleCart()">🛒 <span id="cartCount">0</span></button>
+    </main>
+
+    <footer>
+      <div class="container">© <span id="year"></span> Toko Sepatu Sederhana — Dibuat dengan ❤️</div>
+    </footer>
+
+    <script>
+      // data produk sederhana
+      const products = [
+        { id: 1, name: "Sepatu Casual Putih", price: 199000, category: "casual", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=60" },
+        { id: 2, name: "Sneakers Sport Hitam", price: 249000, category: "sport", img: "https://images.unsplash.com/photo-1528701800489-476cbb58b40a?auto=format&fit=crop&w=800&q=60" },
+        { id: 3, name: "Loafer Formal Cokelat", price: 299000, category: "formal", img: "https://images.unsplash.com/photo-1542293787938-c9e299b880b1?auto=format&fit=crop&w=800&q=60" },
+        { id: 4, name: "Sepatu Lari Ringan", price: 279000, category: "sport", img: "https://images.unsplash.com/photo-1600180758890-0b8a5d2d8f3f?auto=format&fit=crop&w=800&q=60" },
+        { id: 5, name: "Slip-on Kasual", price: 159000, category: "casual", img: "https://images.unsplash.com/photo-1595950653050-efe4d5b0b7b1?auto=format&fit=crop&w=800&q=60" },
+        { id: 6, name: "Oxford Formal Hitam", price: 349000, category: "formal", img: "https://images.unsplash.com/photo-1562158070-3f4a2d3f2b70?auto=format&fit=crop&w=800&q=60" },
+      ];
+
+      const state = { cart: {} };
+
+      function formatRupiah(n) {
+        return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      }
+
+      function renderCatalog(list) {
+        const catalog = document.getElementById("catalog");
+        catalog.innerHTML = "";
+        list.forEach((p) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+          <img src="${p.img}" alt="${p.name}" />
+          <h3>${p.name}</h3>
+          <div class="muted">Kategori: ${p.category}</div>
+          <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px">
+            <div>
+              <div class="price">Rp ${formatRupiah(p.price)}</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn" onclick="addToCart(${p.id})">Tambah ke Keranjang</button>
+              <button onclick="viewDetails(${p.id})" style="padding:8px;border-radius:8px;border:1px solid #e5e7eb;background:#fff">Lihat</button>
+            </div>
+          </div>
+        `;
+          catalog.appendChild(card);
+        });
+        document.getElementById("count").textContent = list.length;
+      }
+
+      function addToCart(id) {
+        const p = products.find((x) => x.id === id);
+        if (!p) return;
+        if (!state.cart[id]) state.cart[id] = { ...p, qty: 0 };
+        state.cart[id].qty++;
+        updateCartUI();
+        // small feedback
+        const btn = document.getElementById("openCart");
+        btn.animate([{ transform: "scale(1)" }, { transform: "scale(1.06)" }, { transform: "scale(1)" }], { duration: 200 });
+      }
+
+      function updateCartUI() {
+        const cartList = document.getElementById("cartList");
+        cartList.innerHTML = "";
+        let total = 0;
+        let items = 0;
+        Object.values(state.cart).forEach((item) => {
+          total += item.price * item.qty;
+          items += item.qty;
+          const el = document.createElement("div");
+          el.className = "cart-item";
+          el.innerHTML = `
+          <img src="${item.img}" alt="${item.name}" />
+          <div style="flex:1">
+            <div style="font-weight:700">${item.name}</div>
+            <div class="muted">Rp ${formatRupiah(item.price)} x ${item.qty}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+            <div style="display:flex;gap:6px">
+              <button style="padding:6px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;" onclick="changeQty(${item.id},-1)">-</button>
+              <button style="padding:6px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;" onclick="changeQty(${item.id},1)">+</button>
+            </div>
+            <button style="padding:6px;border-radius:6px;border:1px solid #fee2e2;background:#fff;color:#ef4444" onclick="removeItem(${item.id})">Hapus</button>
+          </div>
+        `;
+          cartList.appendChild(el);
+        });
+        document.getElementById("totalPrice").textContent = formatRupiah(total);
+        document.getElementById("cartCount").textContent = items;
+      }
+
+      function changeQty(id, delta) {
+        if (!state.cart[id]) return;
+        state.cart[id].qty += delta;
+        if (state.cart[id].qty <= 0) delete state.cart[id];
+        updateCartUI();
+      }
+      function removeItem(id) {
+        delete state.cart[id];
+        updateCartUI();
+      }
+
+      function toggleCart() {
+        const d = document.getElementById("cartDrawer");
+        d.style.display = d.style.display === "block" ? "none" : "block";
+      }
+
+      function viewDetails(id) {
+        const p = products.find((x) => x.id === id);
+        if (!p) return alert(p.name);
+        alert(`${p.name}\nHarga: Rp ${formatRupiah(p.price)}\nKategori: ${p.category}`);
+      }
+
+      function checkout() {
+        if (Object.keys(state.cart).length === 0) return alert("Keranjang kosong.");
+        alert("Terima kasih! Ini demo — proses pembayaran belum diimplementasikan.");
+        state.cart = {};
+        updateCartUI();
+        toggleCart();
+      }
+
+      // filter & search
+      document.getElementById("filter").addEventListener("change", applyFilters);
+      document.getElementById("search").addEventListener("input", applyFilters);
+
+      function applyFilters() {
+        const cat = document.getElementById("filter").value;
+        const q = document.getElementById("search").value.toLowerCase().trim();
+        const filtered = products.filter((p) => {
+          return (cat === "all" || p.category === cat) && (p.name.toLowerCase().includes(q) || p.category.includes(q));
+        });
+        renderCatalog(filtered);
+      }
+
+      function clearFilters() {
+        document.getElementById("filter").value = "all";
+        document.getElementById("search").value = "";
+        applyFilters();
+      }
+
+      // init
+      document.getElementById("year").textContent = new Date().getFullYear();
+      renderCatalog(products);
+      updateCartUI();
+    </script>
+  </body>
+</html>
